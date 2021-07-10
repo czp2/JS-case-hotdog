@@ -161,16 +161,16 @@
 
   //创建下落物体，参数(图片位置，类名，分数，下落速度)
   function createObj(img, name, ss, time) {
-    // 1 创建热狗🌭
+    // 1 创建物体🌭
     var obj = document.createElement('img');
     obj.src = img;
     obj.setAttribute('class', name);
-    // 2 随机在顶部出现热狗🌭
-    var max = (window.innerWidth || document.documentElement.clientWidth) - 50;
+    // 2 随机在顶部出现物体🌭
+    var max = (window.innerWidth || document.documentElement.clientWidth) - obj.offsetWidth;
     var min = 0;
     obj.style.left = Math.floor(Math.random() * (max - min + 1) + min) + 'px';
     document.body.appendChild(obj);
-    //定时下落热狗
+    //定时下落物体
     var tranY = 0;
     var timer = setInterval(function () {
       tranY += 20;
