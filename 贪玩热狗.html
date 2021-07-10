@@ -7,15 +7,17 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <style>
-    body,html{
+    body,
+    html {
       height: 100%;
       overflow: hidden;
     }
 
-    img:not(img.wsc){
+    img:not(img.wsc) {
       position: absolute;
       top: 0px;
     }
+
     img.hotdog {
       width: 20px;
       height: 50px;
@@ -148,7 +150,7 @@
       createObj('./奖杯.png', 'prize', 5, 30);
     }
     if (num <= 0) {
-      starter.forEach(function(item,index) {
+      starter.forEach(function (item, index) {
         clearInterval(starter[index])
       })
       setTimeout(function name(params) {
@@ -179,7 +181,7 @@
         document.body.removeChild(obj);
         clearInterval(timer);
       }
-      var x = Math.abs((obj.offsetLeft + obj.offsetWidth/2) - (wsc.offsetLeft + wsc.offsetWidth/2));
+      var x = Math.abs((obj.offsetLeft + obj.offsetWidth / 2) - (wsc.offsetLeft + wsc.offsetWidth / 2));
       var y = Math.abs(wsc.offsetTop - tranY)
       if (x < 40 && y < 50) {
         document.body.removeChild(obj);
@@ -187,7 +189,7 @@
         document.querySelector('#t2').innerText = eaten
         document.querySelector('#t3').innerText = eaten + '分';
         var score = document.createElement('span');
-        score.innerText = '+' + ss;
+        score.innerText = ss > 0 ? '+' + ss : ss;
         score.style.left = wsc.offsetLeft + 'px';
         score.style.top = wsc.offsetTop - 20 + 'px';
         document.body.appendChild(score);
