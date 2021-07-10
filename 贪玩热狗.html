@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    body,html{
+      height: 100%;
+      overflow: hidden;
+    }
+
+    img:not(img.wsc){
+      position: absolute;
+      top: 0px;
+    }
+    img.hotdog {
+      width: 20px;
+      height: 50px;
+      transition: all linear .03s;
+    }
+
+    img.prize {
+      width: 30px;
+      height: 40px;
+      transition: all linear .03s;
+    }
+
+    img.shit {
+      width: 50px;
+      height: 50px;
+      transition: all linear .03s;
+    }
+
+    img.wsc {
+      position: absolute;
+      bottom: 0px;
+      left: 50%;
+      width: 70px;
+    }
+
+    #menu {
+      width: 300px;
+      height: 200px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 2px solid black;
+      display: none;
+    }
+
+    #menu>p {
+      text-align: center;
+      font: bold 30px/30px "";
+    }
+
+    #menu>div {
+      width: 100px;
+      height: 30px;
+      text-align: center;
+      font: bold 20px/30px "";
+      border: 2px solid black;
+      float: left;
+      margin-left: 30px;
+    }
+
+    body>span {
+      position: absolute;
+      bottom: 80px;
+      font-size: 16px;
+      font-weight: bold;
+      transition: all 1s;
+    }
+
+    body>h1 {
+      position: absolute;
+      top: 0px;
+    }
+
+    body>h1:first-of-type {
+      left: 10px;
+    }
+
+    body>h1:last-of-type {
+      right: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="menu">
+    <p>游戏结束</p>
+    <p id="t3">0</p>
+    <div id="reply">reply</div>
+    <div>❤star</div>
+  </div>
+  <h1>剩余【<span id="t1">30</span>】秒</h1>
+  <h1 id="t2">0</h1>
+  <!-- <img src="./hotdog.jpg" width="20"> -->
+  <img class="wsc" src="./wsc.jpg" alt="">
+
+</body>
+<script>
+  //分数
+  var eaten = 0;
+  //倒计时
+  var num = 30;
+  var wsc = document.querySelector('img.wsc');
+  var menu = document.querySelector('#menu');
+  var reply = document.querySelector('#reply');
+  //重新开始
+  reply.onclick = function () {
+    menu.style.display = "none";
+    location.reload();
+  }
+  //王思聪移动事件
+  document.onmousemove = function (evt) {
+    var e = evt || window.event;
+    wsc.style.left = e.pageX - wsc.offsetWidth / 2 + 'px';
+    if (parseFloat(wsc.style.left) <= 0) wsc.style.left = '0px';
+    if (parseFloat(wsc.style.left) + wsc.offsetWidth >= window.innerWidth) wsc.style.left = window.innerWidth - wsc.offsetWidth + 'px';
+    return false;
+  }
+
+  //时间定时器
+  setInterval(function () {
+    num--;
+  }, 1000)
+
+  //生成热狗定时器
+  var starter = [];
+  starter[0] = setInterval(function () {
+    document.querySelector('#t1').innerText = num;
+    createObj('./hotdog.jpg', 'hotdog', 1, 40);
+  }, 200)
+  //生成shit定时器
+  starter[1] = setInterval(function () {
+    document.querySelector('#t1').innerText = num;
+    createObj('./shit.png', 'shit', -10, 40);
+  }, 1000)
+  //生成奖杯定时器
+  starter[2] = setInterval(function () {
+    if (num <= 15) {
+      createObj('./奖杯.png', 'prize', 5, 30);
+    }
+    if (num <= 0) {
+      starter.forEach(function(item,index) {
+        clearInterval(starter[index])
+      })
+      setTimeout(function name(params) {
+        menu.style.display = "block";
+        document.onmousemove = null;
+      }, 1000)
+    }
+  }, 500)
+
+
+  //创建下落物体，参数(图片位置，类名，分数，下落速度)
+  function createObj(img, name, ss, time) {
+    // 1 创建热狗🌭
+    var obj = document.createElement('img');
+    obj.src = img;
+    obj.setAttribute('class', name);
+    // 2 随机在顶部出现热狗🌭
+    var max = (window.innerWidth || document.documentElement.clientWidth) - 50;
+    var min = 0;
+    obj.style.left = Math.floor(Math.random() * (max - min + 1) + min) + 'px';
+    document.body.appendChild(obj);
+    //定时下落热狗
+    var tranY = 0;
+    var timer = setInterval(function () {
+      tranY += 20;
+      obj.style.transform = 'translateY(' + tranY + 'px)';
+      if (tranY >= (window.innerHeight - 30)) {
+        document.body.removeChild(obj);
+        clearInterval(timer);
+      }
+      var x = Math.abs((obj.offsetLeft + obj.offsetWidth/2) - (wsc.offsetLeft + wsc.offsetWidth/2));
+      var y = Math.abs(wsc.offsetTop - tranY)
+      if (x < 40 && y < 50) {
+        document.body.removeChild(obj);
+        eaten += ss;
+        document.querySelector('#t2').innerText = eaten
+        document.querySelector('#t3').innerText = eaten + '分';
+        var score = document.createElement('span');
+        score.innerText = '+' + ss;
+        score.style.left = wsc.offsetLeft + 'px';
+        score.style.top = wsc.offsetTop - 20 + 'px';
+        document.body.appendChild(score);
+        setTimeout(function () {
+          score.style.fontSize = '40px';
+        }, 100);
+        setTimeout(function () {
+          score.style.fontSize = '16px';
+        }, 500);
+        setTimeout(function () {
+          document.body.removeChild(score);
+        }, 1000);
+        clearInterval(timer);
+      }
+    }, time)
+  }
+</script>
+
+</html>
